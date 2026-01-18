@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AeroReGen</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body style="font-family:Arial;padding:16px;">
+  <h2>AeroReGen – Live Data</h2>
+
+  <div id="status">Connecting…</div>
+  <p>Air Quality: <b id="gas">--</b></p>
+  <p>Temperature: <b id="temp">--</b> °C</p>
+  <p>Water Level: <b id="water">--</b></p>
+
+<script>
+const API = "https://YOUR-RENDER-URL.onrender.com";
+
+async function load(){
+  try{
+    const r = await fetch(API + "/data",{cache:"no-store"});
+    const d = await r.json();
+    gas.textContent = d.gas;
+    temp.textContent = d.temperature;
+    water.textContent = d.water;
+    status.textContent = "Live ✅";
+  }catch{
+    status.textContent = "Offline ❌";
+  }
+}
+setInterval(load,2000);
+load();
+
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+</body>
+</html>
